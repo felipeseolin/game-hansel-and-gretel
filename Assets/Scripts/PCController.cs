@@ -11,6 +11,7 @@ public class PCController : MonoBehaviour
 
     public float velocity = 5;
     public float velocityRotation = 100;
+    public LayerMask target;
 
     // Start is called before the first frame update
     void Start()
@@ -22,8 +23,9 @@ public class PCController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.MovePC();
-        this.RotatePC();
+        MovePC();
+        RotatePC();
+        Shoot();
     }
 
     private void MovePC()
@@ -49,10 +51,32 @@ public class PCController : MonoBehaviour
         transform.Rotate(new Vector3(
             0, keyboardRotation * Time.deltaTime * velocityRotation, 0
         ));
-        
+
         // Using mouse
         _mouseXRotation += Input.GetAxis("Mouse X");
         Quaternion side = Quaternion.AngleAxis(_mouseXRotation, Vector3.up);
         transform.localRotation = _originalRotation * side;
+    }
+
+    private void Shoot()
+    {
+        if (Input.GetMouseButton(0) ||
+            Input.GetKeyDown(KeyCode.Space) ||
+            Input.GetKeyDown(KeyCode.O)
+        )
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(
+                transform.position,
+                transform.forward,
+                out hit,
+                100,
+                target)
+            )
+            {
+                Rigidbody rbd = hit.collider.gameObject.GetComponent<Rigidbody>();
+                rbd.AddForce(transform.forward * 500);
+            }
+        }
     }
 }
