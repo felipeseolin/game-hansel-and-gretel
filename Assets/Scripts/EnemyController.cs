@@ -27,7 +27,7 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Destroy(other.gameObject);
+            GameController.PcHasDead();
         }
     }
 }
