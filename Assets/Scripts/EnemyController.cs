@@ -15,11 +15,13 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
+        transform.SetPositionAndRotation(transform.position, Quaternion.Euler(new Vector3(-90, 0, 270)));
     }
 
     // Update is called once per frame
     void Update()
     {
+        transform.rotation = Quaternion.Euler(new Vector3(-90, transform.rotation.y, 270));
         _agent.SetDestination(pc.transform.position);
     }
     
