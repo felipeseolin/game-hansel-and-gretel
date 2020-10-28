@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
     public static int candies = 0;
     public static bool pcIsDead = false;
     public static bool gameIsPause = false;
+    public static int numberOfLifes = 3;
 
     public GameObject gameOverPanel;
     public GameObject pausePanel;
@@ -51,10 +52,22 @@ public class GameController : MonoBehaviour
     {
         if (!pcIsDead)
             return;
-
-        Cursor.visible = true;
-        Time.timeScale = 0;
-        ActiveGameOverPanel();
+        // Game over or not?
+        numberOfLifes--;
+        if (numberOfLifes <= 0)
+        {
+            // Lifes is over
+            Cursor.visible = true;
+            Time.timeScale = 0;
+            numberOfLifes = 3;
+            ActiveGameOverPanel();
+            pcIsDead = false;
+        }
+        else
+        {
+            pcIsDead = false;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 
     public void PauseGame()
