@@ -8,6 +8,7 @@ public class PCController : MonoBehaviour
     private Rigidbody _rdb;
     private Quaternion _originalRotation;
     private float _mouseXRotation = 0;
+    private AudioSource _audio;
 
     public float velocity = 5;
     public float velocityRotation = 100;
@@ -17,6 +18,7 @@ public class PCController : MonoBehaviour
     void Start()
     {
         _rdb = GetComponent<Rigidbody>();
+        _audio = GetComponent<AudioSource>();
         _originalRotation = transform.localRotation;
     }
 
@@ -37,6 +39,9 @@ public class PCController : MonoBehaviour
             moveSide * velocity, _rdb.velocity.y, moveFoward * velocity
         );
         _rdb.velocity = transform.TransformDirection(v3Velocity);
+        
+        if (!_audio.isPlaying && (moveFoward != 0f || moveSide != 0f))
+            _audio.Play();
     }
 
     private void RotatePC()
