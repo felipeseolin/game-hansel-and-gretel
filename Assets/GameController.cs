@@ -10,6 +10,9 @@ public class GameController : MonoBehaviour
     public static bool pcIsDead = false;
     public static bool gameIsPause = false;
     public static int numberOfLifes = 3;
+    public static bool IsPowerdUp = false;
+    public static float PowerUpTotalTime = 15f;
+    public static float PowerUpTimeLeft = 15f;
 
     public GameObject gameOverPanel;
     public GameObject pausePanel;
@@ -26,6 +29,7 @@ public class GameController : MonoBehaviour
     {
         PauseGame();
         GameOver();
+        PowerUpCounter();
     }
 
     private void ResetGame()
@@ -35,7 +39,44 @@ public class GameController : MonoBehaviour
         gameIsPause = false;
         Time.timeScale = 1f;
         Cursor.visible = false;
+        IsPowerdUp = false;
+        PowerUpTimeLeft = PowerUpTotalTime;
         ActiveGamePanel();
+    }
+
+    private void PowerUpCounter()
+    {
+        if (!IsPowerdUp)
+        {
+            PowerUpTimeLeft = PowerUpTotalTime;
+            return;
+        }
+        
+        if (PowerUpTimeLeft < 0f)
+        {
+            IsPowerdUp = false;
+            PowerUpTimeLeft = PowerUpTotalTime;
+        }
+        PowerUpTimeLeft -= Time.deltaTime;
+    }
+
+    public static void SetPowerdUp(bool value = true)
+    {
+        if (value)
+        {
+            IsPowerdUp = true;
+            PowerUpTimeLeft -= Time.deltaTime;
+            if (PowerUpTimeLeft < 0f)
+            {
+                IsPowerdUp = false;
+                PowerUpTimeLeft = PowerUpTotalTime;
+            }
+        }
+        else
+        {
+            IsPowerdUp = false;                
+            PowerUpTimeLeft = PowerUpTotalTime;
+        }
     }
 
     public static void IncreaseCandy()

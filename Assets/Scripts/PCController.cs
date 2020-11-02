@@ -9,10 +9,12 @@ public class PCController : MonoBehaviour
     private Quaternion _originalRotation;
     private float _mouseXRotation = 0;
     private AudioSource _audio;
+    private AudioSource _audioSlingshot;
 
     public float velocity = 5;
     public float velocityRotation = 100;
     public LayerMask target;
+    public GameObject slingshot;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +22,8 @@ public class PCController : MonoBehaviour
         _rdb = GetComponent<Rigidbody>();
         _audio = GetComponent<AudioSource>();
         _originalRotation = transform.localRotation;
+        slingshot.SetActive(false);
+        _audioSlingshot = slingshot.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -65,11 +69,20 @@ public class PCController : MonoBehaviour
 
     private void Shoot()
     {
+        // Is not powerd up
+        if (!GameController.IsPowerdUp)
+        {
+            slingshot.SetActive(false);
+            return;
+        }
+        // Is Powerd up
+        slingshot.SetActive(true);
         if (Input.GetMouseButton(0) ||
             Input.GetKeyDown(KeyCode.Space) ||
             Input.GetKeyDown(KeyCode.O)
         )
         {
+            _audioSlingshot.Play();
             RaycastHit hit;
             if (Physics.Raycast(
                 transform.position,
@@ -79,8 +92,12 @@ public class PCController : MonoBehaviour
                 target)
             )
             {
-                Rigidbody rbd = hit.collider.gameObject.GetComponent<Rigidbody>();
-                rbd.AddForce(transform.forward * 500);
+                if (hit.transform.parent) {
+                    Destroy(hit.transform.parent.gameObject);
+                }
+                else {
+                    Destroy(hit.collider.gameObject);
+                }
             }
         }
     }
