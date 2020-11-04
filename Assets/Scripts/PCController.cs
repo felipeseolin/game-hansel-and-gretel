@@ -8,6 +8,7 @@ public class PCController : MonoBehaviour
     private Rigidbody _rdb;
     private Quaternion _originalRotation;
     private float _mouseXRotation = 0;
+    private float _keyboarXRotation = 0;
     private AudioSource _audio;
     private AudioSource _audioSlingshot;
 
@@ -50,24 +51,15 @@ public class PCController : MonoBehaviour
 
     private void RotatePC()
     {
-        // Using keyboard Q and E
-        int keyboardRotation = 0;
+        _mouseXRotation += Input.GetAxis("Mouse X");
+        
         if (Input.GetKey(KeyCode.Q))
-            keyboardRotation = -1;
+            _keyboarXRotation -= 1;
         else if (Input.GetKey(KeyCode.E))
-            keyboardRotation = 1;
-
-        transform.Rotate(new Vector3(
-            0, keyboardRotation * Time.deltaTime * velocityRotation, 0
-        ));
-
-        // Using mouse
-        if (keyboardRotation == 0)
-        {
-            _mouseXRotation += Input.GetAxis("Mouse X");
-            Quaternion side = Quaternion.AngleAxis(_mouseXRotation, Vector3.up);
-            transform.localRotation = _originalRotation * side;
-        }
+            _keyboarXRotation += 1;
+        
+        Quaternion side = Quaternion.AngleAxis(_mouseXRotation + _keyboarXRotation, Vector3.up);
+        transform.localRotation = _originalRotation * side;
     }
 
     private void Shoot()
