@@ -62,9 +62,12 @@ public class PCController : MonoBehaviour
         ));
 
         // Using mouse
-        _mouseXRotation += Input.GetAxis("Mouse X");
-        Quaternion side = Quaternion.AngleAxis(_mouseXRotation, Vector3.up);
-        transform.localRotation = _originalRotation * side;
+        if (keyboardRotation == 0)
+        {
+            _mouseXRotation += Input.GetAxis("Mouse X");
+            Quaternion side = Quaternion.AngleAxis(_mouseXRotation, Vector3.up);
+            transform.localRotation = _originalRotation * side;
+        }
     }
 
     private void Shoot()
@@ -92,7 +95,8 @@ public class PCController : MonoBehaviour
                 target)
             )
             {
-                if (hit.transform.parent) {
+                if (hit.transform.parent)
+                {
                     Destroy(hit.transform.parent.gameObject);
                 }
                 else {
