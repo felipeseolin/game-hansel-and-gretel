@@ -17,6 +17,8 @@ public class GameController : MonoBehaviour
     public GameObject gameOverPanel;
     public GameObject pausePanel;
     public GameObject gamePanel;
+    public GameObject candiesContainer;
+    public GameObject powerUpsContainer;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +32,20 @@ public class GameController : MonoBehaviour
         PauseGame();
         GameOver();
         PowerUpCounter();
+        ActivatePowerUps();
+    }
+
+    private void ActivatePowerUps()
+    {
+        if (candies % candiesContainer.transform.childCount == 0)
+        {
+            // Activate all candies
+            for (int i = 0; i < candiesContainer.transform.childCount; i++)
+                candiesContainer.transform.GetChild(i).gameObject.SetActive(true);
+            // Activate all power-ups
+            for (int i = 0; i < powerUpsContainer.transform.childCount; i++)
+                powerUpsContainer.transform.GetChild(i).gameObject.SetActive(true);
+        }
     }
 
     private void ResetGame()
@@ -51,12 +67,13 @@ public class GameController : MonoBehaviour
             PowerUpTimeLeft = PowerUpTotalTime;
             return;
         }
-        
+
         if (PowerUpTimeLeft < 0f)
         {
             IsPowerdUp = false;
             PowerUpTimeLeft = PowerUpTotalTime;
         }
+
         PowerUpTimeLeft -= Time.deltaTime;
     }
 
@@ -74,7 +91,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            IsPowerdUp = false;                
+            IsPowerdUp = false;
             PowerUpTimeLeft = PowerUpTotalTime;
         }
     }
